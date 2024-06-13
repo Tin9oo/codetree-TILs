@@ -180,9 +180,9 @@ public class Main {
     	while(!q.isEmpty()) {
     		Node curNode = q.poll();
     		
-    		if(dist[curNode.idx] < curNode.cost) {
-    			continue;
-    		}
+//    		if(dist[curNode.idx] < curNode.cost) {
+//    			continue;
+//    		}
     		
     		for(int i = 0; i < graph.get(curNode.idx).size(); i++) {
     			Node nxtNode = graph.get(curNode.idx).get(i);
@@ -215,7 +215,11 @@ public class Main {
     		int u = Integer.parseInt(st.nextToken());
     		int w = Integer.parseInt(st.nextToken());
     		
+    		// 출발지 목적지 같으면 제거
     		if(v == u) continue;
+    		
+    		// 중복 간선 제거
+    		
     		
     		graph.get(v).add(new Node(u, w));
     		graph.get(u).add(new Node(v, w));
