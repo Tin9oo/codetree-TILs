@@ -1,3 +1,5 @@
+// package SamsungProblem;
+
 import java.util.*;
 import java.io.*;
 
@@ -71,7 +73,7 @@ public class Main {
 		
 		@Override
 		public String toString() {
-			return "Item[id="+id+", revenue="+revenue+", dest="+dest+"]";
+			return "Item [id="+id+", revenue="+revenue+", dest="+dest+"]";
 		}
 	}
 	
@@ -81,6 +83,11 @@ public class Main {
 		Node(int idx, int cost) {
 			this.idx = idx;
 			this.cost = cost;
+		}
+		
+		@Override
+		public String toString() {
+			return "Node [idx="+idx+", cost="+cost+"]";
 		}
 	}
 	
@@ -184,7 +191,7 @@ public class Main {
     			
     			if(dist[nxtNode.idx] > dist[curNode.idx] + nxtNode.cost) {
     				dist[nxtNode.idx] = dist[curNode.idx] + nxtNode.cost;
-    				q.offer(new Node(nxtNode.idx, nxtNode.cost));
+    				q.offer(new Node(nxtNode.idx, dist[nxtNode.idx]));
     			}
     		}
     	}
@@ -211,6 +218,16 @@ public class Main {
     		int w = Integer.parseInt(st.nextToken());
     		
     		graph.get(v).add(new Node(u, w));
+    		graph.get(u).add(new Node(v, w));
+    	}
+    	
+    	if(log) {
+    		for(ArrayList<Node> arr: graph) {
+    			for(Node n: arr) {
+    				System.out.print(n.toString());
+    			}
+    			System.out.println();
+    		}
     	}
     }
 }
