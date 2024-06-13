@@ -1,5 +1,3 @@
-// package SamsungProblem;
-
 import java.util.*;
 import java.io.*;
 
@@ -216,6 +214,8 @@ public class Main {
     		int v = Integer.parseInt(st.nextToken());
     		int u = Integer.parseInt(st.nextToken());
     		int w = Integer.parseInt(st.nextToken());
+    		
+    		if(v == u) continue;
     		
     		graph.get(v).add(new Node(u, w));
     		graph.get(u).add(new Node(v, w));
