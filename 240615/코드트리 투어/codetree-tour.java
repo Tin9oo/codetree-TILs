@@ -138,7 +138,7 @@ public class Main {
     			income = itemArr.get(i).revenue - dist[itemArr.get(i).dest];
     			id = itemArr.get(i).id;
     			removeIdx = i;
-    		} else if(income == itemArr.get(i).revenue - dist[itemArr.get(i).dest]
+    		} else if(income != -1 && income == itemArr.get(i).revenue - dist[itemArr.get(i).dest]
     				&& itemArr.get(i).id <= itemArr.get(removeIdx).id) { // id는 unique한데 왜 등호를 제거하면 문제가 풀리지 않지?
     			// 최초에 수입을 갱신하는 경우, removeIdx = 0이라서 원하는 id 값을 비교하지 못하게 된다.
     			if(log) {
