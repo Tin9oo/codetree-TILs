@@ -130,16 +130,19 @@ public class Main {
     	    	
     	for(int i = 0; i < itemArr.size(); i++) {
     		if(log) System.out.println(itemArr.get(i).toString());
-    		if(income <= itemArr.get(i).revenue - dist[itemArr.get(i).dest]) {
+    		if(income < itemArr.get(i).revenue - dist[itemArr.get(i).dest]) {
     			if(log) {
     				System.out.println("Max income updated !!");
     				System.out.println("revenue: " + itemArr.get(i).revenue+", cost: " + dist[itemArr.get(i).dest]);
     			}
-    			if(
-    				income == itemArr.get(i).revenue - dist[itemArr.get(i).dest]
-    				&& itemArr.get(i).id >= itemArr.get(removeIdx).id
-    				) {
-    				continue; // 비용이 같아도 id가 크면 무시
+    			income = itemArr.get(i).revenue - dist[itemArr.get(i).dest];
+    			id = itemArr.get(i).id;
+    			removeIdx = i;
+    		} else if(income == itemArr.get(i).revenue - dist[itemArr.get(i).dest]
+    				&& itemArr.get(i).id <= itemArr.get(removeIdx).id) {
+    			if(log) {
+    				System.out.println("Max income updated !!");
+    				System.out.println("revenue: " + itemArr.get(i).revenue+", cost: " + dist[itemArr.get(i).dest]);
     			}
     			income = itemArr.get(i).revenue - dist[itemArr.get(i).dest];
     			id = itemArr.get(i).id;
