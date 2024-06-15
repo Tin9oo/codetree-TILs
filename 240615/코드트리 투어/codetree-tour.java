@@ -46,17 +46,30 @@ public class Main {
 	static ArrayList<ArrayList<Node>> graph;
 	static int[] dist;
 	
-	static ArrayList<Item> itemArr = new ArrayList<>(); 
+	static ArrayList<Item> itemArr = new ArrayList<>();
+	static PriorityQueue<Item> itemPriorityQueue = new PriorityQueue<Main.Item>();
+	
+	static boolean[] isMade = new boolean[30000+1];
+	static boolean[] isCancel = new boolean[30000+1];
 	
 	static int startLand = 0;
 	
-	static class Item {
-		int id, revenue, dest;
+	static class Item implements Comparable<Item> {
+		int id, revenue, dest, profit;
 		
-		Item(int id, int revenue, int dest) {
+		Item(int id, int revenue, int dest, int profit) {
 			this.id = id;
 			this.revenue = revenue;
 			this.dest = dest;
+			this.profit = profit;
+		}
+		
+		@Override
+		public int compareTo(Item other) {
+			if(this.profit == other.profit) {
+				return Integer.compare(this.id, other.id);
+			}
+			return Integer.compare(other.profit, this.profit);
 		}
 		
 		@Override
@@ -104,56 +117,80 @@ public class Main {
     	int id = Integer.parseInt(st.nextToken());
     	int revenue = Integer.parseInt(st.nextToken());
     	int dest = Integer.parseInt(st.nextToken());
+    	int profit = revenue - dist[dest];
     	
-    	itemArr.add(new Item(id, revenue, dest));
+    	isMade[id] = true;
+    	
+//    	itemArr.add(new Item(id, revenue, dest));
+    	itemPriorityQueue.offer(new Item(id, revenue, dest, profit));
     }
     
     // command 300
     static void cancleItem(StringTokenizer st) {
 		int id = Integer.parseInt(st.nextToken());
 		
-    	for(int i = 0; i < itemArr.size(); i++) {
-    		if(itemArr.get(i).id == id) {
-    			itemArr.remove(i);
-    			break;
-    		}
-    	}
+//    	for(int i = 0; i < itemArr.size(); i++) {
+//    		if(itemArr.get(i).id == id) {
+//    			itemArr.remove(i);
+//    			break;
+//    		}
+//    	}
+		
+		if(isMade[id]) isCancel[id] = true;
     }
     
     // command 400
     static void sellOptimalItem() {
     	if(log) System.out.println("sellOptimalItem() !!");
-    	int income = -1; // -1로 해줘야 최초 갱신되지 않았을 때 2번째 조건으로 빠지지 않는다.
-    	int id = -1;
+//    	int income = -1; // -1로 해줘야 최초 갱신되지 않았을 때 2번째 조건으로 빠지지 않는다.
+//    	int id = -1;
+//    	
+//    	int removeIdx = 0;
+//    	
+//    	// 상품을 전부 탐색하는게 시간 낭비로 보인다.
+//    	for(int i = 0; i < itemArr.size(); i++) {
+//    		if(log) System.out.println(itemArr.get(i).toString());
+//    		if(income < itemArr.get(i).revenue - dist[itemArr.get(i).dest]) {
+//    			if(log) {
+//    				System.out.println("Max income updated !!");
+//    				System.out.println("revenue: " + itemArr.get(i).revenue+", cost: " + dist[itemArr.get(i).dest]);
+//    			}
+//    			income = itemArr.get(i).revenue - dist[itemArr.get(i).dest];
+//    			id = itemArr.get(i).id;
+//    			removeIdx = i;
+//    			
+//    		}
+//    		// income이 최초 갱신되지 않은 경우 이 분기로 빠지지 않게 수정해야한다.
+//    		else if(income != -1 && income == itemArr.get(i).revenue - dist[itemArr.get(i).dest]
+//    				&& itemArr.get(i).id <= itemArr.get(removeIdx).id) { // id는 unique한데 왜 등호를 제거하면 문제가 풀리지 않지?
+//    			// 최초에 수입을 갱신하는 경우, removeIdx = 0이라서 원하는 id 값을 비교하지 못하게 된다.
+//    			if(log) {
+//    				System.out.println("Max income updated !!");
+//    				System.out.println("revenue: " + itemArr.get(i).revenue+", cost: " + dist[itemArr.get(i).dest]);
+//    			}
+//    			income = itemArr.get(i).revenue - dist[itemArr.get(i).dest];
+//    			id = itemArr.get(i).id;
+//    			removeIdx = i;
+//    		}
+//    	}
+//    	
+//    	if(id != -1) itemArr.remove(removeIdx);
+//    	
+//    	
+//    	
+//    	System.out.println(id);
     	
-    	int removeIdx = 0;
-    	    	
-    	for(int i = 0; i < itemArr.size(); i++) {
-    		if(log) System.out.println(itemArr.get(i).toString());
-    		if(income < itemArr.get(i).revenue - dist[itemArr.get(i).dest]) {
-    			if(log) {
-    				System.out.println("Max income updated !!");
-    				System.out.println("revenue: " + itemArr.get(i).revenue+", cost: " + dist[itemArr.get(i).dest]);
-    			}
-    			income = itemArr.get(i).revenue - dist[itemArr.get(i).dest];
-    			id = itemArr.get(i).id;
-    			removeIdx = i;
-    		} else if(income != -1 && income == itemArr.get(i).revenue - dist[itemArr.get(i).dest]
-    				&& itemArr.get(i).id <= itemArr.get(removeIdx).id) { // id는 unique한데 왜 등호를 제거하면 문제가 풀리지 않지?
-    			// 최초에 수입을 갱신하는 경우, removeIdx = 0이라서 원하는 id 값을 비교하지 못하게 된다.
-    			if(log) {
-    				System.out.println("Max income updated !!");
-    				System.out.println("revenue: " + itemArr.get(i).revenue+", cost: " + dist[itemArr.get(i).dest]);
-    			}
-    			income = itemArr.get(i).revenue - dist[itemArr.get(i).dest];
-    			id = itemArr.get(i).id;
-    			removeIdx = i;
+    	while(!itemPriorityQueue.isEmpty()) {
+    		Item item = itemPriorityQueue.poll();
+    		if(item.profit < 0) {
+    			break;
+    		}
+    		if(!isCancel[item.id]) {
+    			System.out.println(item.id);
+    			return;
     		}
     	}
-    	
-    	if(id != -1) itemArr.remove(removeIdx);
-    	
-    	System.out.println(id);
+    	System.out.println("-1");
     }
     
     // command 500
