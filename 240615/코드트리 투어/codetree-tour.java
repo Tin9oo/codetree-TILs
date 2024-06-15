@@ -139,7 +139,7 @@ public class Main {
     			id = itemArr.get(i).id;
     			removeIdx = i;
     		} else if(income == itemArr.get(i).revenue - dist[itemArr.get(i).dest]
-    				&& itemArr.get(i).id <= itemArr.get(removeIdx).id) {
+    				&& itemArr.get(i).id < itemArr.get(removeIdx).id) {
     			if(log) {
     				System.out.println("Max income updated !!");
     				System.out.println("revenue: " + itemArr.get(i).revenue+", cost: " + dist[itemArr.get(i).dest]);
