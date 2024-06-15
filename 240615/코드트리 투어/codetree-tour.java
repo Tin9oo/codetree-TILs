@@ -123,7 +123,7 @@ public class Main {
     // command 400
     static void sellOptimalItem() {
     	if(log) System.out.println("sellOptimalItem() !!");
-    	int income = 0;
+    	int income = -1; // -1로 해줘야 최초 갱신되지 않았을 때 2번째 조건으로 빠지지 않는다.
     	int id = -1;
     	
     	int removeIdx = 0;
@@ -139,7 +139,8 @@ public class Main {
     			id = itemArr.get(i).id;
     			removeIdx = i;
     		} else if(income == itemArr.get(i).revenue - dist[itemArr.get(i).dest]
-    				&& itemArr.get(i).id < itemArr.get(removeIdx).id) {
+    				&& itemArr.get(i).id <= itemArr.get(removeIdx).id) { // id는 unique한데 왜 등호를 제거하면 문제가 풀리지 않지?
+    			// 최초에 수입을 갱신하는 경우, removeIdx = 0이라서 원하는 id 값을 비교하지 못하게 된다.
     			if(log) {
     				System.out.println("Max income updated !!");
     				System.out.println("revenue: " + itemArr.get(i).revenue+", cost: " + dist[itemArr.get(i).dest]);
