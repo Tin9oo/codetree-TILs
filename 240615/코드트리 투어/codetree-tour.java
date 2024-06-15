@@ -105,7 +105,13 @@ public class Main {
         	StringTokenizer st = new StringTokenizer(br.readLine());
     		int command = Integer.parseInt(st.nextToken());
     		
-    		if(command == 200) createItem(st);
+    		if(command == 200) {
+    			int id = Integer.parseInt(st.nextToken());
+    	    	int revenue = Integer.parseInt(st.nextToken());
+    	    	int dest = Integer.parseInt(st.nextToken());
+    	    	
+    	    	createItem(id, revenue, dest);
+    		}
     		else if(command == 300) cancleItem(st);
     		else if(command == 400) sellOptimalItem();
     		else if(command == 500) changeStartLand(st);
@@ -113,10 +119,7 @@ public class Main {
     }
     
     // command 200
-    static void createItem(StringTokenizer st) {
-    	int id = Integer.parseInt(st.nextToken());
-    	int revenue = Integer.parseInt(st.nextToken());
-    	int dest = Integer.parseInt(st.nextToken());
+    static void createItem(int id, int revenue, int dest) {
     	int profit = revenue - dist[dest];
     	
     	isMade[id] = true;
@@ -182,6 +185,7 @@ public class Main {
     	
     	while(!itemPriorityQueue.isEmpty()) {
     		Item item = itemPriorityQueue.peek();
+    		if(log) System.out.println(item.toString());
     		if(item.profit < 0) {
     			break;
     		}
@@ -198,6 +202,14 @@ public class Main {
     static void changeStartLand(StringTokenizer st) {
     	startLand = Integer.parseInt(st.nextToken());
     	dijkstra();
+    	
+    	List<Item> items = new ArrayList<Main.Item>();
+    	while(!itemPriorityQueue.isEmpty()) {
+    		items.add(itemPriorityQueue.poll());
+    	}
+    	for(Item i: items) {
+    		createItem(i.id, i.revenue, i.dest);
+    	}
     }
 
     static void dijkstra() {
