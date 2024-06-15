@@ -181,10 +181,11 @@ public class Main {
 //    	System.out.println(id);
     	
     	while(!itemPriorityQueue.isEmpty()) {
-    		Item item = itemPriorityQueue.poll();
+    		Item item = itemPriorityQueue.peek();
     		if(item.profit < 0) {
     			break;
     		}
+    		itemPriorityQueue.poll();
     		if(!isCancel[item.id]) {
     			System.out.println(item.id);
     			return;
